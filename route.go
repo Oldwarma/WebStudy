@@ -4,7 +4,21 @@ import "ProjectName/framework"
 
 //注册路由规则
 func registerRouter(core *framework.Core) {
-	//需求1+2：HTTP方法+静态路由匹配
+	//静态路由+HTTP方法匹配
+	core.Get("/user/login", UserLoginController)
 
-	core.Get("foo", FooControllerHandler)
+	//批量通用前缀
+	subjectApi := core.Group("/subject")
+	{
+		//动态路由
+		subjectApi.Delete("/:id", SubjectDelController)
+		subjectApi.Put("/:id", SubjectUpdateController)
+		subjectApi.Get("/:id", SubjectGetController)
+		subjectApi.Get("/list/all", SubjectListController)
+
+		subjectInnerApi := subjectApi.Group("/info")
+		{
+			subjectInnerApi.Get("/name", SubjectNameController)
+		}
+	}
 }
